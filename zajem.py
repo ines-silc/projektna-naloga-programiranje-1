@@ -69,12 +69,24 @@ def read_file_to_string(directory, filename):
 # pomočjo regularnih izrazov, ki označujejo začetek in konec posameznega
 # oglasa. Funkcija naj vrne seznam nizov.
 
+#Primer vrstice:
+#<td data-label="" class="col-1">
+#<a href="/production/act-s-of-god-lookingglass-theatre-company-2018-2019" title="" data-cms-ai="0">
+#Act(s) of God</a></td>
+#<td data-label="" class="col-2">Lookingglass Theatre Company</td>
+#<td data-label="" class="col-3">Play</td>
+#<td data-label="" class="col-4">Chicago, IL</td>
+#<td data-label="" class="col-5">Regional/ National Tours</td>
+#<td data-label="" class="col-6"></td>
+#</tr><tr class="row-9">
+
+vzorec_vrstice = r'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">
 
 def page_to_ads(directory, datoteka):
-    '''Split "page" to a list of advertisement blocks.'''
+#razdelimo po vrsticah
     vsebina = read_file_to_string(directory, datoteka)
     match = []
-    vzorec = r'<div class="ad.*?">' + r'.*?' + r'<div class="clear"></div>'
+    vzorec = rr'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">
     for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
         nas_oglas = ujemanje.group(0)
         match.append(nas_oglas)
@@ -84,7 +96,9 @@ def page_to_ads(directory, datoteka):
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja oglas, in izlušči
 # podatke o imenu, ceni in opisu v oglasu.
 
-vzorec = re.compile(
+vzorec_podatkov = re.compile(
+    r'<a href="/production/.*-(?P<leto>.*?)" title="" data-cms-ai="0">
+#Act(s) of God</a></td>
     r'</a></h3>(?P<opis>.*?) <div class="additionalInfo">.*?'
     r'<div class="price">(?P<cena>.*?)</div>.*?',
     re.DOTALL
