@@ -102,8 +102,7 @@ vzorec_podatkov = re.compile(
     r'<td data-label="" class="col-2">(?P<venue>)</td>'
     r'<td data-label="" class="col-3">(?P<genre>)</td>'
     r'<td data-label="" class="col-4">(?P<location>)</td>'
-    r'<td data-label="" class="col-5">(?<type>)</td>'
-    ,
+    r'<td data-label="" class="col-5">(?P<type>)</td>',
     re.DOTALL
 )
 
