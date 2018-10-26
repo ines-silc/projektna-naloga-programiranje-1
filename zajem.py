@@ -97,17 +97,20 @@ def page_to_ads(directory, datoteka):
 # podatke o imenu, ceni in opisu v oglasu.
 
 vzorec_podatkov = re.compile(
-    r'<a href="/production/.*-(?P<leto>.*?)" title="" data-cms-ai="0">
-#Act(s) of God</a></td>
-    r'</a></h3>(?P<opis>.*?) <div class="additionalInfo">.*?'
-    r'<div class="price">(?P<cena>.*?)</div>.*?',
+    r'<a href="/production/.*-(?P<leto>.*?)" title="" '
+    r'data-cms-ai="0">(?P<show>.*?)</a></td>
+    r'<td data-label="" class="col-2">(?P<venue>)</td>'
+    r'<td data-label="" class="col-3">(?P<genre>)</td>'
+    r'<td data-label="" class="col-4">(?P<location>)</td>'
+    r'<td data-label="" class="col-5">(?<type>)</td>'
+    ,
     re.DOTALL
 )
 
-def izloci_podatke_oglasa(ujemanje_oglasa):
-    podatki_oglasa = ujemanje_oglasa.groupdict()
-    podatki_oglasa['opis'] = podatki_oglasa['opis'].strip()
-    return podatki_oglasa
+def izloci_podatke(ujemanje):
+    podatki = ujemanje.groupdict()
+    podatki['opis'] = podatki['opis'].strip()
+    return podatki
 
 podatki_oglasov = []
 #to bo seznam slovarjev
