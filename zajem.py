@@ -8,11 +8,11 @@ import csv
 ###############################################################################
 
 # mapa, v katero bomo shranili podatke
-data_directory = 'podatki'
+#data_directory = 'podatki'
 # ime datoteke v katero bomo shranili glavno stran
-frontpage_filename = 'frontpage.html'
+#frontpage_filename = 'frontpage.html'
 # ime CSV datoteke v katero bomo shranili podatke
-csv_filename = 'cat_data.csv'
+#csv_filename = 'cat_data.csv'
 
 
 def download_url_to_string(url):
@@ -80,14 +80,14 @@ def read_file_to_string(directory, filename):
 #<td data-label="" class="col-6"></td>
 #</tr><tr class="row-9">
 
-vzorec_vrstice = r'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">
+vzorec_vrstice = r'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">'
 
 def page_to_ads(directory, datoteka):
 #razdelimo po vrsticah
     vsebina = read_file_to_string(directory, datoteka)
     match = []
-    vzorec = rr'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">
-    for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
+    vzorec = r'<td data-label="" class="col-1">' + r'.*?' + r'<td data-label="" class="col-6"></td>'
+    for ujemanje in re.finditer(vzorec_podatkov, vsebina, re.DOTALL):
         nas_oglas = ujemanje.group(0)
         match.append(nas_oglas)
     return match
@@ -97,18 +97,22 @@ def page_to_ads(directory, datoteka):
 # podatke o imenu, ceni in opisu v oglasu.
 
 vzorec_podatkov = re.compile(
-    r'<a href="/production/.*-(?P<leto>.*?)" title="" '
-    r'data-cms-ai="0">(?P<show>.*?)</a></td>
-    r'<td data-label="" class="col-2">(?P<venue>)</td>'
-    r'<td data-label="" class="col-3">(?P<genre>)</td>'
-    r'<td data-label="" class="col-4">(?P<location>)</td>'
-    r'<td data-label="" class="col-5">(?P<type>)</td>',
+    r'<a href="/production/.*-(?P<time>.*?)"'
+    r'title="" data-cms-ai="0">(?P<show>.*?)</a></td>'
+    r'<td data-label="" class="col-2">(?P<venue>.*?)</td>'
+    r'<td data-label="" class="col-3">(?P<genre>.*?)</td>'
+    r'<td data-label="" class="col-4">(?P<location>.*?)</td>'
+    r'<td data-label="" class="col-5">(?P<type>.*?)</td>',
     re.DOTALL
 )
 
 def izloci_podatke(ujemanje):
     podatki = ujemanje.groupdict()
-    podatki['opis'] = podatki['opis'].strip()
+    podatki['time'] = podatki['time'].strip()
+    podatki['show'] = podatki['show'].strip()
+    podatki['genre'] = podatki['genre'].strip()
+    podatki['location'] = podatki['location'].strip()
+    podatki['type'] = podatki['type'].strip()
     return podatki
 
 podatki_oglasov = []
@@ -119,7 +123,7 @@ def get_dict_from_ad_block(directory, datoteka):
     of an ad block.'''
     seznam = page_to_ads(directory, datoteka)
     for oglas in seznam:
-        for ujemanje in vzorec.finditer(oglas):
+        for ujemanje in vzorec_podatkov.finditer(oglas):
             podatki_oglasov.append(izloci_podatke_oglasa(ujemanje))
     return podatki_oglasov
 
@@ -158,9 +162,12 @@ def write_csv(fieldnames, rows, directory, filename):
 # stolpce [fieldnames] pridobite iz slovarjev.
 
 
-def write_cat_ads_to_csv(directory, filename, csv):
+def write_data_csv(directory, filename, csv):
     rows =  ads_from_file(directory, filename)
-    fieldnames = ["opis","cena"]
-    write_csv(fieldnames, rows, directory, csv_filename)
+    fieldnames = ["time","show", "venue", "genre", "location", "type"]
+    write_csv(fieldnames, rows, directory, csv)
 
-write_cat_ads_to_csv(cat_directory, frontpage_filename, csv_filename)
+write_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
+write_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
+write_data_csv('podatki', 'podatki/london.html', 'london.csv')
+write_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
