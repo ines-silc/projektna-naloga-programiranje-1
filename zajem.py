@@ -3,60 +3,12 @@ import re
 import os
 import csv
 
-###############################################################################
-# Najprej definirajmo nekaj pomožnih orodij za pridobivanje podatkov s spleta.
-###############################################################################
-
 # mapa, v katero bomo shranili podatke
 #data_directory = 'podatki'
 # ime datoteke v katero bomo shranili glavno stran
 #frontpage_filename = 'frontpage.html'
 # ime CSV datoteke v katero bomo shranili podatke
 #csv_filename = 'cat_data.csv'
-
-
-def download_url_to_string(url):
-    '''This function takes a URL as argument and tries to download it
-    using requests. Upon success, it returns the page contents as string.'''
-    try:
-        # del kode, ki morda sproži napako
-        r = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        # koda, ki se izvede pri napaki
-        print('stran'+ url + 'ne obstaja!')
-        # dovolj je če izpišemo opozorilo in prekinemo izvajanje funkcije
-        return 
-    # nadaljujemo s kodo če ni prišlo do napake
-    return r.text
-
-
-def save_string_to_file(text, directory, filename):
-    '''Write "text" to the file "filename" located in directory "directory",
-    creating "directory" if necessary. If "directory" is the empty string, use
-    the current directory.'''
-    os.makedirs(directory, exist_ok=True)
-    path = os.path.join(directory, filename)
-    with open(path, 'w', encoding='utf-8') as file_out:
-        file_out.write(text)
-    return None
-
-# Definirajte funkcijo, ki prenese glavno stran in jo shrani v datoteko.
-
-
-def save_frontpage(url, ime_datoteke):
-    try:
-        r = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        print('stran ' + url + ' ne obstaja!')
-    else:
-        with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:
-            datoteka.write(r.text)
-            print('shranjeno!')
-
-###############################################################################
-# Po pridobitvi podatkov jih želimo obdelati.
-###############################################################################
-
 
 def read_file_to_string(directory, filename):
     '''Return the contents of the file "directory"/"filename" as a string.'''
@@ -80,10 +32,6 @@ def read_file_to_string(directory, filename):
 #<td data-label="" class="col-6"></td>
 #</tr><tr class="row-9">
 
-vzorec_vrstice = re.compile(
-    r'<td data-label="" class="col-1">.*<td data-label="" class="col-6">',
-    re.DOTALL)
-
 def page_to_ads(directory, datoteka):
 #razdelimo po vrsticah
     vsebina = read_file_to_string(directory, datoteka)
@@ -98,7 +46,7 @@ def page_to_ads(directory, datoteka):
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja oglas, in izlušči
 # podatke o imenu, ceni in opisu v oglasu.
 
-vzorec_podatkov = re.compile(
+vzorec = re.compile(
     r'<a href="/production/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
     r'title="" data-cms-ai="0">(?P<show>.*?)</a></td>'
     r'<td data-label="" class="col-2">(?P<venue>.*?)</td>'
@@ -121,28 +69,18 @@ podatki_predstav = []
 #to bo seznam slovarjev
 
 def get_dict_from_ad_block(directory, datoteka):
-    '''Build a dictionary containing the name, description and price
-    of an ad block.'''
+    '''Naredi slovar z časom, naslovom, žanrom, lokacijo in tipom predstave'''
     seznam = page_to_ads(directory, datoteka)
     for predstava in seznam:
-        for ujemanje in vzorec_podatkov.finditer(predstava):
+        for ujemanje in vzorec.finditer(predstava):
             podatki_predstav.append(izloci_podatke(ujemanje))
     return podatki_predstav
-
-
-# Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
-# besedilo spletne strani, in vrne seznam slovarjev, ki vsebujejo podatke o
-# vseh oglasih strani.
-
 
 def ads_from_file(directory, filename):
     '''Parse the ads in filename/directory into a dictionary list.'''
     predstave = get_dict_from_ad_block(directory, filename)
     return predstave
 
-
-###############################################################################
-# Obdelane podatke želimo sedaj shraniti.
 ###############################################################################
 
 
@@ -170,6 +108,6 @@ def write_data_csv(directory, filename, csv):
     write_csv(fieldnames, rows, directory, csv)
 
 write_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
-write_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
-write_data_csv('podatki', 'podatki/london.html', 'london.csv')
-write_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
+#write_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
+#write_data_csv('podatki', 'podatki/london.html', 'london.csv')
+#write_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
