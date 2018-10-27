@@ -13,7 +13,7 @@ def razdelitev(directory, datoteka):
     '''funkcija razdeli surov niz na podatke o posamezni predstavi'''
     vsebina = preberi_datoteko(directory, datoteka)
     match = []
-    vzorec = r'<td data-label="" class="col-1">' + r'.*?' + r'<td data-label="" class="col-6">'
+    vzorec = r'<td data-label="" class="col-1">' + r'(\n|.)*?' + r'<td data-label="" class="col-6">'
     for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
         ena_vrstica = ujemanje.group(0)
         match.append(ena_vrstica)
@@ -21,11 +21,11 @@ def razdelitev(directory, datoteka):
 
 vzorec = re.compile(
     r'<a href="/production/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
-    r'title="" data-cms-ai="0">(?P<show>.*?)</a></td>'
-    r'<td data-label="" class="col-2">(?P<venue>.*?)</td>'
-    r'<td data-label="" class="col-3">(?P<genre>.*?)</td>'
-    r'<td data-label="" class="col-4">(?P<location>.*?)</td>'
-    r'<td data-label="" class="col-5">(?P<type>.*?)</td>',
+    r'title="" data-cms-ai="0">(?:\n|\s)*(.*)(?:\n|\s)*</a>(?:\n|\s)*</td>'
+    r'<td data-label="" class="col-2">(?:\n|\s)*(?P<venue>.*?)(?:\n|\s)*</td>'
+    r'<td data-label="" class="col-3">(?:\n|\s)*(?P<genre>.*?)(?:\n|\s)*</td>'
+    r'<td data-label="" class="col-4">(?:\n|\s)*(?P<location>.*?)(?:\n|\s)*</td>'
+    r'<td data-label="" class="col-5">(?:\n|\s)*(?P<type>.*?)(?:\n|\s)*</td>',
     re.DOTALL
 )
 
@@ -68,7 +68,7 @@ def zapisi_data_csv(directory, filename, csv):
     fieldnames = ["time","show", "venue", "genre", "location", "type"]
     zapisi_csv(fieldnames, rows, directory, csv)
 
-zapisi_data_csv('podatki', 'broadway.html', 'broadway.csv')
+zapisi_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
 #zapisi_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
 #zapisi_data_csv('podatki', 'podatki/london.html', 'london.csv')
 #zapisi_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
