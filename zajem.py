@@ -21,7 +21,7 @@ def razdelitev(directory, datoteka):
 
 vzorec = re.compile(
     r'<a href="/production/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
-    r'title="" data-cms-ai="0">(?:\n|\s)*(.*)(?:\n|\s)*</a>(?:\n|\s)*</td>'
+    r'title="" data-cms-ai="0">(?:\n|\s)*(?P<show>.*?)(?:\n|\s)*</a>(?:\n|\s)*</td>'
     r'<td data-label="" class="col-2">(?:\n|\s)*(?P<venue>.*?)(?:\n|\s)*</td>'
     r'<td data-label="" class="col-3">(?:\n|\s)*(?P<genre>.*?)(?:\n|\s)*</td>'
     r'<td data-label="" class="col-4">(?:\n|\s)*(?P<location>.*?)(?:\n|\s)*</td>'
