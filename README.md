@@ -2,7 +2,7 @@
 
 Podatke bom črpala s strani http://www.playbill.com/productions?q=&venue-type=all&state=all&genre=all
 
-Zajeti podatki:
+Zajeti podatki: 
 * naslov predstave
 * prizorišče
 * zvrst
