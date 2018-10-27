@@ -88,10 +88,10 @@ def page_to_ads(directory, datoteka):
 #razdelimo po vrsticah
     vsebina = read_file_to_string(directory, datoteka)
     match = []
-    vzorec = vzorec_vrstice
-    for ujemanje in re.finditer(vzorec_podatkov, vsebina, re.DOTALL):
-        nas_oglas = ujemanje.group(0)
-        match.append(nas_oglas)
+    vzorec = r'<td data-label="" class="col-1">' + r'.*?' + r'<td data-label="" class="col-6">'
+    for ujemanje in re.finditer(vzorec, vsebina, re.DOTALL):
+        ena_vrstica = ujemanje.group(0)
+        match.append(ena_vrstica)
     return match
 
 
@@ -99,12 +99,12 @@ def page_to_ads(directory, datoteka):
 # podatke o imenu, ceni in opisu v oglasu.
 
 vzorec_podatkov = re.compile(
-    r'<a href="\/production\/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
-    r'title="" data-cms-ai="0">(?P<show>.*?)<\/a><\/td>'
-    r'<td data-label="" class="col-2">(?P<venue>.*?)<\/td>'
-    r'<td data-label="" class="col-3">(?P<genre>.*?)<\/td>'
-    r'<td data-label="" class="col-4">(?P<location>.*?)<\/td>'
-    r'<td data-label="" class="col-5">(?P<type>.*?)<\/td>',
+    r'<a href="/production/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
+    r'title="" data-cms-ai="0">(?P<show>.*?)</a></td>'
+    r'<td data-label="" class="col-2">(?P<venue>.*?)</td>'
+    r'<td data-label="" class="col-3">(?P<genre>.*?)</td>'
+    r'<td data-label="" class="col-4">(?P<location>.*?)</td>'
+    r'<td data-label="" class="col-5">(?P<type>.*?)</td>',
     re.DOTALL
 )
 
@@ -117,17 +117,17 @@ def izloci_podatke(ujemanje):
     podatki['type'] = podatki['type'].strip()
     return podatki
 
-podatki_oglasov = []
+podatki_predstav = []
 #to bo seznam slovarjev
 
 def get_dict_from_ad_block(directory, datoteka):
     '''Build a dictionary containing the name, description and price
     of an ad block.'''
     seznam = page_to_ads(directory, datoteka)
-    for oglas in seznam:
-        for ujemanje in vzorec_podatkov.finditer(oglas):
-            podatki_oglasov.append(izloci_podatke_oglasa(ujemanje))
-    return podatki_oglasov
+    for predstava in seznam:
+        for ujemanje in vzorec_podatkov.finditer(predstava):
+            podatki_predstav.append(izloci_podatke(ujemanje))
+    return podatki_predstav
 
 
 # Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
@@ -137,8 +137,8 @@ def get_dict_from_ad_block(directory, datoteka):
 
 def ads_from_file(directory, filename):
     '''Parse the ads in filename/directory into a dictionary list.'''
-    oglasi = get_dict_from_ad_block(directory, filename)
-    return oglasi
+    predstave = get_dict_from_ad_block(directory, filename)
+    return predstave
 
 
 ###############################################################################
