@@ -3,6 +3,7 @@ import re
 import os
 import csv
 
+
 def preberi_datoteko(directory, filename):
     '''Funkcija vzame datoteko in jo pretvori v niz'''
     with open(filename, encoding='utf-8') as datoteka:
@@ -29,30 +30,25 @@ vzorec = re.compile(
 )
 
 def izloci_podatke(ujemanje):
-    podatki = ujemanje.groupdict()
-    podatki['time'] = podatki['time'].strip()
-    podatki['show'] = podatki['show'].strip()
-    podatki['genre'] = podatki['genre'].strip()
-    podatki['location'] = podatki['location'].strip()
-    podatki['type'] = podatki['type'].strip()
+    podatki = []
+    for expression in vzorec.finditer(ujemanje):
+        podatki = expression.groupdict()
+#    podatki['time'] = podatki['time'].strip()
+#    podatki['show'] = podatki['show'].strip()
+#    podatki['genre'] = podatki['genre'].strip()
+#    podatki['location'] = podatki['location'].strip()
+#    podatki['type'] = podatki['type'].strip()
     return podatki
 
 def pridobi_slovar(directory, datoteka):
     '''Naredi slovar z časom, naslovom, žanrom, lokacijo in tipom predstave'''
     seznam = razdelitev(directory, datoteka)
     podatki_predstav = []
-    for predstava in seznam:
-        for podatki in vzorec.finditer(predstava):
-            podatki_predstav.append(izloci_podatke(podatki))
+    for i in range(0, len(seznam)):
+        podatki_predstav.append(izloci_podatke(seznam[i]))
     return podatki_predstav
 
-def ads_from_file(directory, filename):
-    '''Naredi seznam z elementi iz slovarja'''
-    predstave = pridobi_slovar(directory, filename)
-    return predstave
-
 ###############################################################################
-
 
 def zapisi_csv(fieldnames, rows, directory, filename):
     '''Write a CSV file to directory/filename. The fieldnames must be a list of
@@ -68,11 +64,11 @@ def zapisi_csv(fieldnames, rows, directory, filename):
     return None
 
 def zapisi_data_csv(directory, filename, csv):
-    rows =  ads_from_file(directory, filename)
+    rows =  pridobi_slovar(directory, filename)
     fieldnames = ["time","show", "venue", "genre", "location", "type"]
     zapisi_csv(fieldnames, rows, directory, csv)
 
-zapisi_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
+zapisi_data_csv('podatki', 'broadway.html', 'broadway.csv')
 #zapisi_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
 #zapisi_data_csv('podatki', 'podatki/london.html', 'london.csv')
 #zapisi_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
