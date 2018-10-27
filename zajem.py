@@ -20,33 +20,39 @@ def razdelitev(directory, datoteka):
     return match
 
 vzorec = re.compile(
-    r'<a href="/production/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
-    r'title="" data-cms-ai="0">(?:\n|\s)*(?P<show>.*?)(?:\n|\s)*</a>(?:\n|\s)*</td>'
-    r'<td data-label="" class="col-2">(?:\n|\s)*(?P<venue>.*?)(?:\n|\s)*</td>'
-    r'<td data-label="" class="col-3">(?:\n|\s)*(?P<genre>.*?)(?:\n|\s)*</td>'
-    r'<td data-label="" class="col-4">(?:\n|\s)*(?P<location>.*?)(?:\n|\s)*</td>'
-    r'<td data-label="" class="col-5">(?:\n|\s)*(?P<type>.*?)(?:\n|\s)*</td>',
+    r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'
+    r'" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>'
+    r'\s*<td data-label="" class=\"col-2\">(?:\n|\s)*(?P<venue>.*?)\s*</td>\s*'
+    r'\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*'
+    r'\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>'
+    r'\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>',
     re.DOTALL
 )
 
 def izloci_podatke(ujemanje):
-    podatki = []
-    for expression in vzorec.finditer(ujemanje):
-        podatki = expression.groupdict()
-#    podatki['time'] = podatki['time'].strip()
-#    podatki['show'] = podatki['show'].strip()
-#    podatki['genre'] = podatki['genre'].strip()
-#    podatki['location'] = podatki['location'].strip()
-#    podatki['type'] = podatki['type'].strip()
+    podatki = ujemanje.groupdict()
+    podatki['time'] = podatki['time'].strip()
+    podatki['show'] = podatki['show'].strip()
+    podatki['genre'] = podatki['genre'].strip()
+    podatki['location'] = podatki['location'].strip()
+    podatki['type'] = podatki['type'].strip()
     return podatki
+
+podatki_predstav = []
 
 def pridobi_slovar(directory, datoteka):
     '''Naredi slovar z časom, naslovom, žanrom, lokacijo in tipom predstave'''
-    seznam = razdelitev(directory, datoteka)
-    podatki_predstav = []
-    for i in range(0, len(seznam)):
-        podatki_predstav.append(izloci_podatke(seznam[i]))
+    seznam = razdelitev(directory, datoteka) 
+    for predstava in seznam:
+        for ujemanje in vzorec.finditer(predstava):
+            podatki_predstav.append(izloci_podatke(ujemanje))
     return podatki_predstav
+
+with open('podatki/broadway.csv', 'w') as datoteka:
+    writer = csv.writer(datoteka)
+    writer.writerow(('time', 'show', 'venue', 'genre', 'location', 'type'))
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/broadway.html')):
+        writer.writerow((x.group(1), x.group(2), x.group(3), x.group(4), x.group(5)))
 
 ###############################################################################
 
@@ -68,7 +74,7 @@ def zapisi_data_csv(directory, filename, csv):
     fieldnames = ["time","show", "venue", "genre", "location", "type"]
     zapisi_csv(fieldnames, rows, directory, csv)
 
-zapisi_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
+#zapisi_data_csv('podatki', 'podatki/broadway.html', 'broadway.csv')
 #zapisi_data_csv('podatki', 'podatki/offbroadway.html', 'offbroadway.csv')
 #zapisi_data_csv('podatki', 'podatki/london.html', 'london.csv')
 #zapisi_data_csv('podatki', 'podatki/regional.html', 'regional.csv')
