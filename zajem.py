@@ -80,13 +80,15 @@ def read_file_to_string(directory, filename):
 #<td data-label="" class="col-6"></td>
 #</tr><tr class="row-9">
 
-vzorec_vrstice = r'<td data-label="" class="col-1">' + r'.*?' + r'<tr class="row-\d+">'
+vzorec_vrstice = re.compile(
+    r'<td data-label="" class="col-1">.*<td data-label="" class="col-6">',
+    re.DOTALL)
 
 def page_to_ads(directory, datoteka):
 #razdelimo po vrsticah
     vsebina = read_file_to_string(directory, datoteka)
     match = []
-    vzorec = r'<td data-label="" class="col-1">' + r'.*?' + r'<td data-label="" class="col-6"></td>'
+    vzorec = vzorec_vrstice
     for ujemanje in re.finditer(vzorec_podatkov, vsebina, re.DOTALL):
         nas_oglas = ujemanje.group(0)
         match.append(nas_oglas)
@@ -97,12 +99,12 @@ def page_to_ads(directory, datoteka):
 # podatke o imenu, ceni in opisu v oglasu.
 
 vzorec_podatkov = re.compile(
-    r'<a href="/production/.*-(?P<time>.*?)"'
-    r'title="" data-cms-ai="0">(?P<show>.*?)</a></td>'
-    r'<td data-label="" class="col-2">(?P<venue>.*?)</td>'
-    r'<td data-label="" class="col-3">(?P<genre>.*?)</td>'
-    r'<td data-label="" class="col-4">(?P<location>.*?)</td>'
-    r'<td data-label="" class="col-5">(?P<type>.*?)</td>',
+    r'<a href="\/production\/.*-(?P<time>\d?\d?\d?\d?-\d?\d?\d?\d?)?"'
+    r'title="" data-cms-ai="0">(?P<show>.*?)<\/a><\/td>'
+    r'<td data-label="" class="col-2">(?P<venue>.*?)<\/td>'
+    r'<td data-label="" class="col-3">(?P<genre>.*?)<\/td>'
+    r'<td data-label="" class="col-4">(?P<location>.*?)<\/td>'
+    r'<td data-label="" class="col-5">(?P<type>.*?)<\/td>',
     re.DOTALL
 )
 
