@@ -2,7 +2,7 @@ import requests
 import re
 import os
 import csv
-
+import sys
 
 def preberi_datoteko(directory, filename):
     '''Funkcija vzame datoteko in jo pretvori v niz'''
@@ -19,15 +19,14 @@ def razdelitev(directory, datoteka):
         match.append(ena_vrstica)
     return match
 
-vzorec = re.compile(
+vzorec1 = re.compile(
     r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'
-    r'" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>'
-    r'\s*<td data-label="" class=\"col-2\">(?:\n|\s)*(?P<venue>.*?)\s*</td>\s*'
-    r'\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*'
-    r'\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>'
-    r'\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>',
-    re.DOTALL
-)
+#    r'(?:\w|")" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>'
+#    r'<td data-label="" class="col-2">\s*(?P<venue>.*?)\s*</td>'
+#    r'<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*'
+#    r'<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>'
+#    r'<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>'
+    )
 
 def izloci_podatke(ujemanje):
     podatki = ujemanje.groupdict()
@@ -48,11 +47,40 @@ def pridobi_slovar(directory, datoteka):
             podatki_predstav.append(izloci_podatke(ujemanje))
     return podatki_predstav
 
+#with open('podatki/broadway.csv', 'w') as datoteka:
+#    writer = csv.writer(datoteka)
+#    writer.writerow(('time'))
+#    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/broadway.html'), re.DOTALL):
+#        writer.writerow(x.group(1))
+
+
 with open('podatki/broadway.csv', 'w') as datoteka:
+    vzorec = r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'+ '.*'+ r'(?:\w|")" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>\s*<td data-label="" class="col-2">\s*(?P<venue>.*?)\s*</td>\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>'
     writer = csv.writer(datoteka)
-    writer.writerow(('time', 'show', 'venue', 'genre', 'location', 'type'))
+    writer.writerow(['time', 'show', 'venue', 'genre', 'location', 'type'])
     for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/broadway.html')):
-        writer.writerow((x.group(1), x.group(2), x.group(3), x.group(4), x.group(5)))
+        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
+
+with open('podatki/offbroadway.csv', 'w') as datoteka:
+    vzorec = r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'+ '.*'+ r'(?:\w|")" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>\s*<td data-label="" class="col-2">\s*(?P<venue>.*?)\s*</td>\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>'
+    writer = csv.writer(datoteka)
+    writer.writerow(['time', 'show', 'venue', 'genre', 'location', 'type'])
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/offbroadway.html')):
+        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
+
+with open('podatki/regional.csv', 'w') as datoteka:
+    vzorec = r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'+ '.*'+ r'(?:\w|")" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>\s*<td data-label="" class="col-2">\s*(?P<venue>.*?)\s*</td>\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>'
+    writer = csv.writer(datoteka)
+    writer.writerow(['time', 'show', 'venue', 'genre', 'location', 'type'])
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/regional.html')):
+        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
+
+with open('podatki/london.csv', 'w') as datoteka:
+    vzorec = r'<a href="/production/.*-(?P<time>(?:(?:\d\d\d\d-\d\d\d\d)|(?:\d{10})))?"\s*'+ '.*'+ r'(?:\w|")" data-cms-ai="0">\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*?)\s*</a>\s*</td>\s*<td data-label="" class="col-2">\s*(?P<venue>.*?)\s*</td>\s*<td data-label="" class="col-3">\s*(?P<genre>.*?)\s*</td>\s*<td data-label="" class="col-4">\s*(?P<location>.*?)\s*</td>\s*<td data-label="" class="col-5">\s*(?P<type>.*?)\s*</td>'
+    writer = csv.writer(datoteka)
+    writer.writerow(['time', 'show', 'venue', 'genre', 'location', 'type'])
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/london.html')):
+        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
 
 ###############################################################################
 
