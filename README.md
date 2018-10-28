@@ -3,12 +3,13 @@
 Podatke bom črpala s strani http://www.playbill.com/productions?q=&venue-type=all&state=all&genre=all
 
 Zajeti podatki: 
-* naslov predstave
-* prizorišče
-* zvrst
-* lokacija
-* vrsta predstave
-* leto začetka predstave
-* leto zaključka predstave
+- `leto začetka in predvidenega zaključka predstave`
+- `naslov predstave`
+- `prizorišče`
+- `zvrst`
+- `lokacija`
+- `vrsta predstave`
 
-Moj namen je analizirati predstave npr. katera predstava je trajala najdle, katera predstava se je končala še v istem letu, na katerih lokacijah je izvedenih največ predstav, katera predstava je imela največ izvedb...
+Moj namen je analizirati predstave npr. katera predstava je trajala najdle, na katerih lokacijah je izvedenih največ predstav, katera predstava je imela največ izvedb...
+
+Podatke imam zbrane v mapi `podatki`, v štirih datotekah s končnico `.csv`. Vsaka datoteka po vrsticah vsebuje podatke o eni predstavi, v stolpcih pa zgoraj navedene podatke.
