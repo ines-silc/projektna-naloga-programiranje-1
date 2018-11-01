@@ -19,7 +19,6 @@ def shrani_spletno_stran(url, ime_datoteke, vsili_prenos=False):
             print('shranjeno že od prej!')
             return
         r = requests.get(url)
-        r.encoding = 'unicode_internal'
     except requests.exceptions.ConnectionError:
         print('stran ne obstaja!')
     else:
@@ -34,11 +33,6 @@ shrani_spletno_stran(link, 'podatki/offbroadway.html')
 def preberi_datoteko(directory, filename):
     '''Funkcija vzame datoteko in jo pretvori v niz'''
     with open(filename, encoding='utf-8') as datoteka:
-        return datoteka.read()
-
-def preberi(directory, filename):
-    '''Funkcija vzame datoteko in jo pretvori v niz'''
-    with open(filename, encoding='unicode_internal') as datoteka:
         return datoteka.read()
 
 #def razdelitev(directory, datoteka):
@@ -71,7 +65,7 @@ with open('podatki/offbroadway.csv', 'w') as datoteka:
     vzorec = '<a  href="/production/.*-(?P<leto>(?:\d\d\d\d-\d\d\d\d)|(?:\d{10}))" title data-cms-ai="0" >\s*(?P<show>(?:\w|\'|\ |–|:|/|,)*)\s*</a>\s*</td>\s*<td data-label="" class="col-2">\s*(?P<venue>.*)\s*</td>\s*<td data-label="" class="col-3">\s*(?P<genre>.*)\s*</td>\s*<td data-label="" class="col-4">\s*(?P<location>.*)\s*</td>\s*<td data-label="" class="col-5">\s*(?P<type>.*)\s*</td>'
     writer = csv.writer(datoteka)
     writer.writerow(['time', 'show', 'venue', 'genre', 'location', 'type'])
-    for x in re.finditer(vzorec, preberi('podatki', 'podatki/offbroadway.html')):
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/offbroadway.html')):
         writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
 
 #with open('podatki/regional.csv', 'w') as datoteka:
