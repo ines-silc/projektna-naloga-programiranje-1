@@ -1,7 +1,11 @@
-﻿# Analiza gledaliških predstav in muziklov
+﻿# Analiza gledaliških predstav in muziklov 
 
-Podatke bom črpala s strani http://www.playbill.com/productions?q=&venue-type=all&state=all&genre=all
-
+Podatke bom črpala s strani:
+ - http://www.playbill.com/productions?q=&venue-type=broadway&state=all&genre=all
+ - http://www.playbill.com/productions?q=&venue-type=offbroadway&state=all&genre=all
+ - http://www.playbill.com/productions?q=&venue-type=london&state=all&genre=all
+ - http://www.playbill.com/productions?q=&venue-type=regional&state=all&genre=all 
+ 
 Zajeti podatki: 
 - `leto začetka in predvidenega zaključka predstave`
 - `naslov predstave`
