@@ -89,25 +89,31 @@ def preberi_datoteko(directory, filename):
 
 #shrani_spletno_stran('https://www.broadwayleague.com/research/statistics-broadway-nyc/', 'podatki/broadway_statistika.html', 'utf-8')
 
-with open('podatki/broadway_statistika.csv', 'w', encoding = 'utf-8') as datoteka:
-    vzorec = r'<td>(?P<Season>(?:\d\d\d\d-\d\d)).*</td>\s*<td>\$(?P<Gross>(?:\d,\d\d\d)|(\d\d\d))</td>\s*<td>(?P<Attendance>\d*\.?\d*)</td>\s*<td>(?P<Playing_Weeks>(?:\d,\d\d\d)|(\d\d\d))</td>\s*<td>(?P<New_Productions>(?:\d+))</td>'
-    writer = csv.writer(datoteka)
-    writer.writerow(['season', 'gross', 'attendance', 'duration', 'newProductions'])
-    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/broadway_statistika.html')):
-        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5)])
+#with open('podatki/broadway_statistika.csv', 'w', encoding = 'utf-8') as datoteka:
+#    vzorec = r'<td>(?P<Season>(?:\d\d\d\d-\d\d)).*</td>\s*<td>\$(?P<Gross>(?:\d,\d\d\d)|(?:\d\d\d))</td>\s*<td>(?P<Attendance>\d*\.?\d*)</td>\s*<td>(?P<Playing_Weeks>(?:\d,\d\d\d)|(?:\d\d\d))</td>\s*<td>(?P<New_Productions>(?:\d+))</td>'
+#    writer = csv.writer(datoteka)
+#    writer.writerow(['season', 'gross', 'attendance', 'duration', 'newProductions'])
+#    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/broadway_statistika.html')):
+#        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5)])
 
 
 #shrani_spletno_stran('https://www.broadwayleague.com/research/statistics-touring-broadway/', 'podatki/regional_statistika.html', 'utf-8')
 
-with open('podatki/regional_statistika.csv', 'w', encoding = 'utf-8') as datoteka:
-    vzorec = r'<td>(?P<Season>(?:\d\d\d\d-\d\d)).*</td>\s*<td>\$?(?P<Gross>(?:\d,\d\d\d)|(\d\d\d))</td>\s*<td>(?P<Attendance>(?:\d*\.?\d*))</td>\s*<td>(?P<Playing_Weeks>(?:\d,\d\d\d)|(\d\d\d))</td>'
+#with open('podatki/regional_statistika.csv', 'w', encoding = 'utf-8') as datoteka:
+#    vzorec = r'<td>(?P<Season>(?:\d\d\d\d-\d\d)).*</td>\s*<td>\$?(?P<Gross>(?:\d,\d\d\d)|(?:\d\d\d))</td>\s*<td>(?P<Attendance>(?:\d*\.?\d*))</td>\s*<td>(?P<Playing_Weeks>(?:\d,\d\d\d)|(?:\d\d\d))</td>'
+#    writer = csv.writer(datoteka)
+#    writer.writerow(['season', 'gross', 'attendance', 'duration'])
+#    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/regional_statistika.html')):
+#        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4)])
+
+#shrani_spletno_stran('https://www.ibdb.com/shows', 'podatki/all_shows.html', 'utf-8')
+
+with open('podatki/all_shows.csv', 'w', encoding = 'utf-8') as datoteka:
+    vzorec = r'<li>\s*<a href="/broadway.production/(?:\w|-)*">(?P<show>.*)</a> \[(?P<type>\w*)\] <br />\s*(?P<genre>\w*,?\s*\w*)<br />\s*Opening: (?P<opening>.*)<br />\s*Closing: (?P<closing>.*)<br />\s*(?:Performance Count: (?P<performances>\d*)\s*<br />)'
     writer = csv.writer(datoteka)
-    writer.writerow(['season', 'gross', 'attendance', 'duration'])
-    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/regional_statistika.html')):
-        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4)])
-
-
-
+    writer.writerow(['show', 'type', 'genre', 'opening', 'closing', 'performances'])
+    for x in re.finditer(vzorec, preberi_datoteko('podatki', 'podatki/all_shows.html')):
+        writer.writerow([x.group(1), x.group(2), x.group(3), x.group(4), x.group(5), x.group(6)])
 
 
 
