@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[42]:
+# In[26]:
 
 
 import pandas as pd
@@ -75,12 +75,14 @@ rprisotnost = regional_statistika.plot(kind = 'line', x = 'year', y = 'attendanc
 regional_statistika
 
 
-# In[55]:
+# In[54]:
 
 
 vsi = pd.read_csv('podatki/all_shows.csv', encoding = 'utf-8')
 vsi = vsi[~vsi.closing.str.contains("<em>Closing date unknown</em>")]
 vsi = vsi[~vsi.opening.str.contains("<em>Never Officially Opened</em>")]
+vsi.show= vsi['show'].str.replace('&#34;', '')
+vsi.show= vsi['show'].str.replace('&#133;', ' ')
 vsi['o_year'] = vsi['opening'].str.extract('(\d\d\d\d)', expand=True)
 vsi['o_month'] = vsi['opening'].str.extract('([a-zA-z]{3})', expand=True)
 vsi['c_year'] = vsi['closing'].str.extract('(\d\d\d\d)', expand=True)
@@ -94,10 +96,15 @@ vsi['duration'] = vsi.c_year-vsi.o_year
 #nastopi = vsi.plot(kind='line', x = 'o_year', y = 'performances')
 dolzine = vsi[['o_year', 'duration']]
 dolzine = dolzine.groupby(['o_year']).max()
-#f = dolzine.plot(kind = 'line')
-#plt.plot(dolzine['o_year'], dolzine['duration'])
-#dolzine['o_year']
-#vsi
+dolzine.head()
+gdolzine = dolzine.plot(kind = 'bar', figsize=(20, 8))
+
+
+# In[28]:
+
+
+import zemljevid
+zemljevid.m
 
 
 # In[ ]:
