@@ -13,8 +13,8 @@ a.to_csv('podatki/zemljevid.csv', sep=',')
 b = pd.read_csv('podatki/zemljevid.csv')
 b['state'] = b['state'].str.strip()
 
-state_geo = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'us-states.json')
-state_data = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'poskus.csv')
+state_geo = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'podatki/us-states.json')
+state_data = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'podatki/poskus.csv')
 
 ### Initialize the map:
 m = folium.Map(location=[38, -96], zoom_start = 4)

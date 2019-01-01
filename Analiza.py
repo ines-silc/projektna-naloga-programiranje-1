@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[26]:
+# In[7]:
 
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import zemljevid
 
 broadway = pd.read_csv('podatki/broadway.csv', encoding = 'cp1252')
 offbroadway = pd.read_csv('podatki/offbroadway.csv', encoding = 'cp1252')
@@ -13,7 +14,7 @@ regional = pd.read_csv('podatki/regional.csv', encoding = 'cp1252')
 london = pd.read_csv('podatki/london.csv', encoding = 'cp1252')
 
 
-# In[3]:
+# In[2]:
 
 
 #BROADWAY
@@ -26,7 +27,7 @@ broadway.venue.describe()
 broadway[broadway.venue.str.contains('American Airlines Theatre')]
 
 
-# In[20]:
+# In[3]:
 
 
 broadway_statistika = pd.read_csv('podatki/broadway_statistika.csv', encoding = 'utf-8')
@@ -52,7 +53,7 @@ bnovo = broadway_statistika.plot(kind = 'line', x = 'year', y = 'newProductions'
 broadway_statistika
 
 
-# In[27]:
+# In[4]:
 
 
 regional_statistika = pd.read_csv('podatki/regional_statistika.csv', encoding = 'utf-8')
@@ -75,7 +76,7 @@ rprisotnost = regional_statistika.plot(kind = 'line', x = 'year', y = 'attendanc
 regional_statistika
 
 
-# In[54]:
+# In[5]:
 
 
 vsi = pd.read_csv('podatki/all_shows.csv', encoding = 'utf-8')
@@ -97,13 +98,12 @@ vsi['duration'] = vsi.c_year-vsi.o_year
 dolzine = vsi[['o_year', 'duration']]
 dolzine = dolzine.groupby(['o_year']).max()
 dolzine.head()
-gdolzine = dolzine.plot(kind = 'bar', figsize=(20, 8))
+gdolzine = dolzine.plot(kind = 'line', figsize=(20, 8))
 
 
-# In[28]:
+# In[8]:
 
 
-import zemljevid
 zemljevid.m
 
 
