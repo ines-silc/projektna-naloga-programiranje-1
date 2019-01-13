@@ -19,6 +19,8 @@ broadway_statistika.gross= broadway_statistika['gross'].str.replace(',', '')
 broadway_statistika.gross = broadway_statistika.gross.astype(int)
 broadway_statistika.attendance = broadway_statistika.attendance.astype(float)
 broadway_statistika.newProductions = broadway_statistika.newProductions.astype(int)
+broadway_statistika.duration= broadway_statistika['duration'].str.replace(',', '')
+broadway_statistika.duration = broadway_statistika.duration.astype(int)
 
 regional_statistika = pd.read_csv('podatki/regional_statistika.csv', encoding = 'utf-8')
 regional_statistika['year'], regional_statistika['end'] =(
