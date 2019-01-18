@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[19]:
+# In[1]:
 
 
 import pandas as pd
@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import ureditev as u
 
 
-# V tej nalogi je moj namen analizirati predstave, ki se izvajajo na odrih ulice Broadway, predstave po ostalih zveznih državah Združenih držav Americe in Londona.
+# V tej nalogi je moj namen analizirati predstave, ki se izvajajo na odrih ulice Broadway, predstave po ostalih zveznih državah Združenih držav Amerike in Londona.
 
-# In[20]:
+# In[30]:
 
 
 #BROADWAY
@@ -31,9 +31,9 @@ u.broadway[u.broadway.venue.str.contains('American Airlines Theatre')]
 
 # Trenutno se na Broadwayu izvaja 11 predstav, za naslednje leto pa jih je napovedanih 26. Najpopularnejše gledališče je american Airlines Theatre, v katerem se v sezoni 2018-2019 izvajajo 3 predstave.
 
-# Spodnja tabela prikazuje podatke o predstavah na Broadway odru od leta 1984. Stoplci po vrsti prikazujejo bruto dobiček v milijonih ameriških dolarjev, število obiskovalcev v milijonih, sama produktivnost predstav in število novih predstav v vsakem letu. Produktivnost predstav se meri v tednih, predstavlja vsoto vseh tednov, kadar so se predstave izvajale. Kot pričakovano dobiček in število obiskovalcev skozi leta narašča, medtem ko graf produktivnost in število novih predstav nima posebnih značilnosti.
+# Spodnja tabela in grafi prikazujejo podatke o predstavah na Broadway odru od leta 1984. Stoplci po vrsti prikazujejo bruto dobiček v milijonih ameriških dolarjev, število obiskovalcev v milijonih, sama produktivnost predstav in število novih predstav v vsakem letu. Produktivnost predstav se meri v tednih, predstavlja vsoto vseh tednov, kadar so se predstave izvajale. Kot pričakovano dobiček in število obiskovalcev skozi leta narašča, medtem ko graf produktivnost in število novih predstav nima posebnih značilnosti.
 
-# In[21]:
+# In[3]:
 
 
 #dobiček
@@ -47,45 +47,76 @@ bnovo = u.broadway_statistika.plot(kind = 'line', x = 'year', y = 'newProduction
 u.broadway_statistika.head()
 
 
-# In[85]:
+# Spodnja tabela in grafi prikazujejo enake karakteristike kot zgornja, le da tu opazujemo predstave po celotni državi ZDA.
+
+# In[28]:
 
 
 #dobiček
-rdobicek = regional_statistika.plot(kind = 'line', x = 'year', y = 'gross')
+rdobicek = u.regional_statistika.plot(kind = 'line', x = 'year', y = 'gross')
 #prisotnost
-rprisotnost = regional_statistika.plot(kind = 'line', x = 'year', y = 'attendance')
-regional_statistika
+rprisotnost = u.regional_statistika.plot(kind = 'line', x = 'year', y = 'attendance')
+u.regional_statistika.head()
 
 
-# In[89]:
+# Poglejmo si natančnejše podatke o predstavah od leta 1800 naprej. Spodnji graf prikazuje število izvedb vseh predstav vsakega leta.
+
+# In[26]:
 
 
-vsi['duration'] = vsi.c_year-vsi.o_year
-nastopi = vsi[['o_year', 'performances']]
+u.vsi['duration'] = u.vsi.c_year-u.vsi.o_year
+nastopi = u.vsi[['o_year', 'performances']]
 nastopi = nastopi.groupby(['o_year']).count()
 gnastopi = nastopi.plot(kind = 'line', figsize=(20, 8))
+tipi = u.vsi[['o_year', 'type']]
+u.vsi.head()
 
 
-dolzine = vsi[['o_year', 'duration']]
+# Predstave se predvajajo različno dolgo, odvisno od priljubljenosti. Spodnji graf prikazuje število let, v katerih se bo še predvajala najuspešnejša predstava vsakega leta.
+
+# In[25]:
+
+
+dolzine = u.vsi[['o_year', 'duration']]
 dolzine = dolzine.groupby(['o_year']).max()
 gdolzine = dolzine.plot(kind = 'line', figsize=(20, 8))
 
-tipi = vsi[['o_year', 'type']]
-#tipi = tipi.pivot_table(index='o_year', columns='type',aggfunc='count')
 
-#tipi = tipi.groupby(['o_year', 'type']).sum().sum(level=['o_year', 'type']).unstack('type')
-##############################################33
-#gtipi = tipi.plot.bar(stacked = True)
+# Poglejmo še mesece, v katerih se pogosto začenjajo predstave. Pričakujemo, da bodo meseci, v katerih se je začelo največ predstav, meseci proti koncu leta, saj predstave, ki se začnejo prevajati proti koncu leta pričakujejo večji obisk zaradi božičnih praznikov. V začetku februarja izidejo tudi nominacije za najprestižnejše nagrade v gledališkem krogu (Tony awards), kjer so največkrat nagrajene predstave, ki so se začele po poletju.
 
-vsi
+# In[22]:
 
 
-# In[87]:
+mesec = u.vsi[['o_month']]
+meseci = mesec.groupby('o_month')['o_month'].count()
+meseci = meseci.reindex(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+
+print(meseci)
+gmeseci = meseci.plot(kind = 'bar')
 
 
+# Poleg glavnega odra v New Yorku, se v Združenih državah Amerike pogosto tudi po ostalih zveznih državah. Spodnji zemljevid prikazuje število predstav, ki se izvajajo v sezoni 2018-2019 po zveznih državah ZDA.
+
+# In[24]:
+
+
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import zemljevid
 zemljevid.m
 
+
+# Po zveznih državah je bila najpogosteje izvajana predstava *Finding Neverland*.
+
+# In[29]:
+
+
+u.regional.describe()
+
+
+# ### Zaključek
+# 
+# Kot pričakovano sam dobiček predstav na vseh odrih po Združenih država narašča, medtem ko obisk predstav lahko kakšno leto upade. Največ predstav na odru Broadway se je izvajalo v tridesetih letih prejšnjega stoletja, od takrat pa število novih predstav upada. Največ predstav izven New Yorka pa se izvaja v zvezni državi *California*.
 
 # In[ ]:
 
