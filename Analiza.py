@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import ureditev as u
 
 
-# V tej nalogi je moj namen analizirati predstave, ki se izvajajo na odrih ulice Broadway, predstave po ostalih zveznih državah Združenih držav Amerike in Londona.
+# V tej nalogi je moj namen analizirati predstave, ki se izvajajo na odrih ulice Broadway in predstave po ostalih zveznih državah Združenih držav Amerike. Moj namen je analizirati predstave npr. katera predstava je trajala najdle, na katerih lokacijah je izvedenih največ predstav, katera predstava je imela največ izvedb, v katerih zveznih državah se izvaja največ predstav, katera sezona je bila najbolj profitabilna in ali imamo v vsaki sezoni uspešno predstavo, ki lahko traja več let.
 
-# In[30]:
+# In[2]:
 
 
 #BROADWAY
@@ -49,7 +49,7 @@ u.broadway_statistika.head()
 
 # Spodnja tabela in grafi prikazujejo enake karakteristike kot zgornja, le da tu opazujemo predstave po celotni državi ZDA.
 
-# In[28]:
+# In[4]:
 
 
 #dobiček
@@ -61,7 +61,7 @@ u.regional_statistika.head()
 
 # Poglejmo si natančnejše podatke o predstavah od leta 1800 naprej. Spodnji graf prikazuje število izvedb vseh predstav vsakega leta.
 
-# In[26]:
+# In[13]:
 
 
 u.vsi['duration'] = u.vsi.c_year-u.vsi.o_year
@@ -71,10 +71,13 @@ gnastopi = nastopi.plot(kind = 'line', figsize=(20, 8))
 tipi = u.vsi[['o_year', 'type']]
 u.vsi.head()
 
+print('Najdlje trajajoča predstava', u.vsi.loc[u.vsi['duration'].idxmax()])
+u.vsi.head()
+
 
 # Predstave se predvajajo različno dolgo, odvisno od priljubljenosti. Spodnji graf prikazuje število let, v katerih se bo še predvajala najuspešnejša predstava vsakega leta.
 
-# In[25]:
+# In[9]:
 
 
 dolzine = u.vsi[['o_year', 'duration']]
@@ -84,7 +87,7 @@ gdolzine = dolzine.plot(kind = 'line', figsize=(20, 8))
 
 # Poglejmo še mesece, v katerih se pogosto začenjajo predstave. Pričakujemo, da bodo meseci, v katerih se je začelo največ predstav, meseci proti koncu leta, saj predstave, ki se začnejo prevajati proti koncu leta pričakujejo večji obisk zaradi božičnih praznikov. V začetku februarja izidejo tudi nominacije za najprestižnejše nagrade v gledališkem krogu (Tony awards), kjer so največkrat nagrajene predstave, ki so se začele po poletju.
 
-# In[22]:
+# In[10]:
 
 
 mesec = u.vsi[['o_month']]
@@ -97,11 +100,9 @@ gmeseci = meseci.plot(kind = 'bar')
 
 # Poleg glavnega odra v New Yorku, se v Združenih državah Amerike pogosto tudi po ostalih zveznih državah. Spodnji zemljevid prikazuje število predstav, ki se izvajajo v sezoni 2018-2019 po zveznih državah ZDA.
 
-# In[24]:
+# In[11]:
 
 
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
 import zemljevid
 zemljevid.m
 
@@ -116,7 +117,7 @@ u.regional.describe()
 
 # ### Zaključek
 # 
-# Kot pričakovano sam dobiček predstav na vseh odrih po Združenih država narašča, medtem ko obisk predstav lahko kakšno leto upade. Največ predstav na odru Broadway se je izvajalo v tridesetih letih prejšnjega stoletja, od takrat pa število novih predstav upada. Največ predstav izven New Yorka pa se izvaja v zvezni državi *California*.
+# Kot pričakovano sam dobiček predstav na vseh odrih po Združenih država narašča, medtem ko obisk predstav lahko kakšno leto upade. Največ predstav na odru Broadway se je izvajalo v tridesetih letih prejšnjega stoletja, od takrat pa število novih predstav upada. Največ predstav izven New Yorka pa se izvaja v zvezni državi *California*. Najdlje trajajoča predstava je bila `Cats`, ki se je izvajala 18 let, in sicer od leta 1982 do leta 2000.
 
 # In[ ]:
 

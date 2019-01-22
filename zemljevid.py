@@ -1,3 +1,9 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+#Zaradi preprostosti sem se odločila zemljevid prikazati s pomočjo paketa 'folium'.
+#Ker je to že zastarel paket nam na začetku izpiše opozorilo, zaradi same čistosti
+#poročila, sem uvozila še paket 'warnings', ki to sporočilo skrije.
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import folium
@@ -16,10 +22,11 @@ b['state'] = b['state'].str.strip()
 state_geo = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'podatki/us-states.json')
 state_data = os.path.join('/Users/Ines Šilc/Documents/projektna-naloga-programiranje-1', 'podatki/poskus.csv')
 
-### Initialize the map:
+#Osnovni zemljevid
 m = folium.Map(location=[38, -96], zoom_start = 4)
-## 
-### Add the color for the chloropleth:
+
+
+#Dodamo specifikacije barve
 m.choropleth(
  geo_data=state_geo,
  name='choropleth',
@@ -33,4 +40,4 @@ m.choropleth(
 )
 folium.LayerControl().add_to(m)
 
-m.save('zemljevid.html')
+m.save('podatki/zemljevid.html')
